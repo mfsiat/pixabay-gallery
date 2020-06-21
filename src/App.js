@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import ImageCard from './components/ImageCard';
+import ImageSearch from './components/ImageSearch';
+
 
 function App() {
   // state to store images 
@@ -9,46 +12,27 @@ function App() {
   useEffect(() => {
     fetch(`https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true`)
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => {
+        setImages(data.hits);
+        setIsLoading(false);
+      })
       .catch(err => console.log(err))
-  }, []);
+  }, [term]);
+  // we put term as dependencies because after each term change the fetch request runs again
 
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg">
-      <img src="https://source.unsplash.com/random" alt="" className="w-full"/>
-        <div className="px-6 px-4">
-          <div className="font-bold text-purple-500 text-xl mb-2">
-            Photo by John Doe
-          </div>
-          <ul>
-            <li>
-              <strong>Views: </strong>
-              4000
-            </li>
-            <li>
-              <strong>Downloads: </strong>
-              4000
-            </li>
-            <li>
-              <strong>Likes: </strong>
-              4000
-            </li>
-          </ul>
-        </div>
-        <div className="px-6 py-4"> 
-          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-            #tag1
-          </span>
-          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-            #tag2
-          </span>
-          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-            #tag3
-          </span>
-          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-            #tag4
-          </span>
-        </div>
+    <div className="container mx-auto">
+      <ImageSearch searchText={(text) => setTerm(text)} />
+
+      {/* if no image found */}
+      { !isLoading && images.length === 0 && <h1 className="text-5xl text-center mx-auto mt-32">No images found</h1> }
+
+      {/* For loading */}
+      {isLoading ? <h1 className="text-6xl text-center mx-auto mt-32">Loading.......</h1> : <div className="grid grid-cols-3 gap-4">
+        {images.map(image => (
+          <ImageCard key={image.id} image={image} />
+        ))}
+      </div>}
     </div>
   );
 }
