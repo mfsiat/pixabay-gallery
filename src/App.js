@@ -4,35 +4,52 @@ import ImageSearch from './components/ImageSearch';
 
 
 function App() {
-  // state to store images 
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [term, setTerm] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+
     fetch(`https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        return res.json();
+      })
       .then(data => {
-        setImages(data.hits);
+        setImages(data.hits ?? []);
         setIsLoading(false);
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.error(err);
+        setError('Failed to load images. Please try again.');
+        setIsLoading(false);
+      });
   }, [term]);
-  // we put term as dependencies because after each term change the fetch request runs again
 
   return (
     <div className="container mx-auto">
       <ImageSearch searchText={(text) => setTerm(text)} />
 
-      {/* if no image found */}
-      { !isLoading && images.length === 0 && <h1 className="text-5xl text-center mx-auto mt-32">No images found</h1> }
+      {error && (
+        <h1 className="text-3xl text-center text-red-500 mx-auto mt-32">{error}</h1>
+      )}
 
-      {/* For loading */}
-      {isLoading ? <h1 className="text-6xl text-center mx-auto mt-32">Loading.......</h1> : <div className="grid grid-cols-3 gap-4">
-        {images.map(image => (
-          <ImageCard key={image.id} image={image} />
-        ))}
-      </div>}
+      {!error && !isLoading && images.length === 0 && (
+        <h1 className="text-5xl text-center mx-auto mt-32">No images found</h1>
+      )}
+
+      {!error && (
+        isLoading
+          ? <h1 className="text-6xl text-center mx-auto mt-32">Loading.......</h1>
+          : <div className="grid grid-cols-3 gap-4">
+              {images.map(image => (
+                <ImageCard key={image.id} image={image} />
+              ))}
+            </div>
+      )}
     </div>
   );
 }
