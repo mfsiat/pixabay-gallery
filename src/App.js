@@ -10,10 +10,15 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     setIsLoading(true);
     setError(null);
 
-    fetch(`https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true`)
+    fetch(
+      `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true`,
+      { signal: controller.signal }
+    )
       .then(res => {
         if (!res.ok) throw new Error(`API error: ${res.status}`);
         return res.json();
@@ -23,10 +28,13 @@ function App() {
         setIsLoading(false);
       })
       .catch(err => {
+        if (err.name === 'AbortError') return;
         console.error(err);
         setError('Failed to load images. Please try again.');
         setIsLoading(false);
       });
+
+    return () => controller.abort();
   }, [term]);
 
   return (
