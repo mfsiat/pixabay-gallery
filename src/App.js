@@ -3,6 +3,13 @@ import ImageCard from './components/ImageCard';
 import ImageSearch from './components/ImageSearch';
 
 
+if (process.env.NODE_ENV === 'development' && !process.env.REACT_APP_PIXABAY_API_KEY) {
+  console.warn(
+    '[pixabay-gallery] REACT_APP_PIXABAY_API_KEY is not set.\n' +
+    'Copy .env.example to .env and add your key from https://pixabay.com/api/docs/'
+  );
+}
+
 function App() {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
