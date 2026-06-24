@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ImageCard = ({ image }) => {
-  const tags = image.tags.split(',');
+  const tags = (image.tags || '').split(',').filter(Boolean);
 
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg">
