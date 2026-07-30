@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.1",
-    "concurrently": "^10.0.3",
+    "concurrently": "^10.0.4",
     "postcss-cli": "^7.1.1",
     "tailwindcss": "^1.4.6"
   }
