@@ -5,7 +5,9 @@ const ImageSearch = ({ searchText }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    searchText(text);
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    searchText(trimmed);
   }
 
   return (
