@@ -40,6 +40,9 @@
     "autoprefixer": "^9.8.1",
     "concurrently": "^10.0.4",
     "postcss-cli": "^7.1.1",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-normalize": "^10.0.1",
+    "postcss-preset-env": "^7.0.1",
     "tailwindcss": "^1.4.6"
   }
 }
