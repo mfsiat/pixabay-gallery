@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ImageCard = ({ image }) => {
-  const tags = (image.tags || '').split(',').filter(Boolean);
+  const tags = (image.tags || '').split(',').map(tag => tag.trim()).filter(Boolean);
   const altText = image.tags
     ? `${image.tags}${image.user ? ` — photo by ${image.user}` : ''}`
     : 'Pixabay gallery image';
