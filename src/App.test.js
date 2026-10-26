@@ -47,7 +47,7 @@ describe('App Component', () => {
   });
 
   test('fetches images on search term change', async () => {
-    fetch.mockResolvedValueOnce({
+    fetch.mockResolvedValue({
       ok: true,
       json: async () => mockImageData
     });
@@ -68,7 +68,7 @@ describe('App Component', () => {
   });
 
   test('displays images after successful fetch', async () => {
-    fetch.mockResolvedValueOnce({
+    fetch.mockResolvedValue({
       ok: true,
       json: async () => mockImageData
     });
@@ -87,7 +87,7 @@ describe('App Component', () => {
   });
 
   test('displays error message on API error', async () => {
-    fetch.mockResolvedValueOnce({
+    fetch.mockResolvedValue({
       ok: false,
       status: 500
     });
@@ -105,7 +105,7 @@ describe('App Component', () => {
   });
 
   test('displays "No images found" when hits array is empty', async () => {
-    fetch.mockResolvedValueOnce({
+    fetch.mockResolvedValue({
       ok: true,
       json: async () => ({ hits: [] })
     });
@@ -123,7 +123,7 @@ describe('App Component', () => {
   });
 
   test('handles network error gracefully', async () => {
-    fetch.mockRejectedValueOnce(new Error('Network error'));
+    fetch.mockRejectedValue(new Error('Network error'));
 
     render(<App />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
@@ -138,24 +138,29 @@ describe('App Component', () => {
   });
 
   test('aborts fetch on unmount', async () => {
+    const OriginalAbortController = global.AbortController;
     const abortSpy = jest.fn();
     global.AbortController = jest.fn(() => ({
       signal: {},
       abort: abortSpy
     }));
 
-    fetch.mockImplementation(() => new Promise(() => {}));
-    const { unmount } = render(<App />);
+    try {
+      fetch.mockImplementation(() => new Promise(() => {}));
+      const { unmount } = render(<App />);
 
-    unmount();
-    expect(abortSpy).toHaveBeenCalled();
+      unmount();
+      expect(abortSpy).toHaveBeenCalled();
+    } finally {
+      global.AbortController = OriginalAbortController;
+    }
   });
 
   test('does not display error when fetch is aborted', async () => {
     const abortError = new Error('Aborted');
     abortError.name = 'AbortError';
 
-    fetch.mockRejectedValueOnce(abortError);
+    fetch.mockRejectedValue(abortError);
 
     render(<App />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
@@ -170,7 +175,7 @@ describe('App Component', () => {
   });
 
   test('handles response without hits property', async () => {
-    fetch.mockResolvedValueOnce({
+    fetch.mockResolvedValue({
       ok: true,
       json: async () => ({}) // No hits property
     });
@@ -188,7 +193,7 @@ describe('App Component', () => {
   });
 
   test('includes API key and image_type in API call', async () => {
-    fetch.mockResolvedValueOnce({
+    fetch.mockResolvedValue({
       ok: true,
       json: async () => mockImageData
     });
