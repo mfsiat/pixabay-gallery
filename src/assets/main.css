@@ -1,3 +1,4 @@
+/* Tailwind CSS layers (v3) */
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -51,7 +52,6 @@
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
 }
-
 ::backdrop {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -104,9 +104,8 @@
   --tw-contain-layout:  ;
   --tw-contain-paint:  ;
   --tw-contain-style:  ;
-}/*
-! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com
-*//*
+}
+/* ! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
 */
@@ -519,7 +518,6 @@ video {
   }
 }
 @media (min-width: 1536px) {
-
   .container {
     max-width: 1536px;
   }

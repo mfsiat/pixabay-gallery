@@ -4,12 +4,12 @@
   "private": true,
   "homepage": "https://mfsiat.github.io/pixabay-gallery",
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.5.2",
     "gh-pages": "^5.0.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-scripts": "5.0.1"
   },
   "scripts": {
@@ -41,6 +41,9 @@
     "concurrently": "^10.0.4",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-normalize": "^10.0.1",
+    "postcss-preset-env": "^7.0.1",
     "tailwindcss": "^3.4.17"
   }
 }
