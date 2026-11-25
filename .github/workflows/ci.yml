@@ -1,7 +1,8 @@
 name: CI
 
-# Validate every pull request targeting master, and (on success) merge it
-# automatically. Also runs on pushes to master so the base branch stays green.
+# Validate every pull request targeting master. A PR is auto-merged on success
+# only when it carries the `automerge` label (opt-in per PR). Also runs on pushes
+# to master so the base branch stays green.
 on:
   pull_request:
     branches: [master]
@@ -52,7 +53,8 @@ jobs:
     needs: validate
     if: >-
       github.event_name == 'pull_request' &&
-      github.event.pull_request.draft == false
+      github.event.pull_request.draft == false &&
+      contains(github.event.pull_request.labels.*.name, 'automerge')
     runs-on: ubuntu-latest
     permissions:
       contents: write

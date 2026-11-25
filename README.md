@@ -35,6 +35,8 @@ npm start
 
 Get a free API key at [pixabay.com/api/docs](https://pixabay.com/api/docs/).
 
+> **Package manager:** this project uses **npm** (`package-lock.json` is the single source of truth, and CI runs `npm ci`). Please don't commit a `yarn.lock`.
+
 ## Security Note
 
 This is a client-side-only React app. The Pixabay API key is embedded in the JavaScript bundle at build time and **is visible to anyone who inspects the page source**. This is a known limitation of CRA's `REACT_APP_*` pattern.

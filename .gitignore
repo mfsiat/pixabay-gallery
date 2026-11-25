@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# this project uses npm (package-lock.json); do not commit a yarn lockfile
+yarn.lock
+
 # testing
 /coverage
 
