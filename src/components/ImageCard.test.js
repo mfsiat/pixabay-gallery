@@ -12,16 +12,10 @@ const mockImage = {
   tags: 'nature,landscape,mountain'
 };
 
-// The stats render as "<strong>Views: </strong>{value}", so the label and value
-// live in separate DOM nodes. This matcher finds the leaf-most element whose
-// combined text content matches, ignoring the element boundary.
-const splitText = (pattern) => (_content, node) => {
-  if (!node) return false;
-  const normalize = (el) => el.textContent.replace(/\s+/g, ' ').trim();
-  const selfMatches = pattern.test(normalize(node));
-  const childMatches = Array.from(node.children).some(child => pattern.test(normalize(child)));
-  return selfMatches && !childMatches;
-};
+// The stats label and value live in separate nodes (<strong>Views: </strong>{value}),
+// so match against the containing <li>'s full text content.
+const statMatcher = (regex) => (content, element) =>
+  element?.tagName === 'LI' && regex.test(element.textContent);
 
 describe('ImageCard Component', () => {
   test('renders image with correct src URL', () => {
@@ -37,17 +31,17 @@ describe('ImageCard Component', () => {
 
   test('renders view count', () => {
     render(<ImageCard image={mockImage} />);
-    expect(screen.getByText(splitText(/Views:\s+1500/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Views:\s+1500/))).toBeInTheDocument();
   });
 
   test('renders download count', () => {
     render(<ImageCard image={mockImage} />);
-    expect(screen.getByText(splitText(/Downloads:\s+750/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Downloads:\s+750/))).toBeInTheDocument();
   });
 
   test('renders like count', () => {
     render(<ImageCard image={mockImage} />);
-    expect(screen.getByText(splitText(/Likes:\s+250/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Likes:\s+250/))).toBeInTheDocument();
   });
 
   test('renders all tags from comma-separated string', () => {
@@ -133,7 +127,9 @@ describe('ImageCard Component', () => {
     expect(screen.getByText('#nature')).toBeInTheDocument();
     expect(screen.getByText('#landscape')).toBeInTheDocument();
     // Should not render empty tags as separate elements
-    const tags = screen.getAllByText(/^#/);
+    const tags = screen.getAllByRole('generic').filter(
+      el => el.tagName === 'SPAN' && el.textContent.startsWith('#')
+    );
     expect(tags.length).toBe(2);
   });
 
@@ -145,9 +141,9 @@ describe('ImageCard Component', () => {
       likes: 3333333
     };
     render(<ImageCard image={imageWithLargeStats} />);
-    expect(screen.getByText(splitText(/Views:\s+9999999/))).toBeInTheDocument();
-    expect(screen.getByText(splitText(/Downloads:\s+5555555/))).toBeInTheDocument();
-    expect(screen.getByText(splitText(/Likes:\s+3333333/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Views:\s+9999999/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Downloads:\s+5555555/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Likes:\s+3333333/))).toBeInTheDocument();
   });
 
   test('handles zero statistics', () => {
@@ -158,9 +154,9 @@ describe('ImageCard Component', () => {
       likes: 0
     };
     render(<ImageCard image={imageWithZeroStats} />);
-    expect(screen.getByText(splitText(/Views:\s+0/))).toBeInTheDocument();
-    expect(screen.getByText(splitText(/Downloads:\s+0/))).toBeInTheDocument();
-    expect(screen.getByText(splitText(/Likes:\s+0/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Views:\s+0/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Downloads:\s+0/))).toBeInTheDocument();
+    expect(screen.getByText(statMatcher(/Likes:\s+0/))).toBeInTheDocument();
   });
 
   test('tags are rendered as inline-block elements', () => {

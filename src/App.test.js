@@ -138,7 +138,7 @@ describe('App Component', () => {
   });
 
   test('aborts fetch on unmount', async () => {
-    const RealAbortController = global.AbortController;
+    const OriginalAbortController = global.AbortController;
     const abortSpy = jest.fn();
     global.AbortController = jest.fn(() => ({
       signal: {},
@@ -152,8 +152,7 @@ describe('App Component', () => {
       unmount();
       expect(abortSpy).toHaveBeenCalled();
     } finally {
-      // Restore so later tests get a real AbortController.
-      global.AbortController = RealAbortController;
+      global.AbortController = OriginalAbortController;
     }
   });
 
