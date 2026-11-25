@@ -5,19 +5,19 @@ import ImageSearch from './ImageSearch';
 
 describe('ImageSearch Component', () => {
   test('renders search input field', () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     expect(screen.getByPlaceholderText(/Search Image Term/i)).toBeInTheDocument();
   });
 
   test('renders search button', () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     expect(screen.getByRole('button', { name: /Search/i })).toBeInTheDocument();
   });
 
   test('updates input value on user input', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
 
@@ -27,7 +27,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('calls searchText callback on form submission', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });
@@ -39,7 +39,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('does not call searchText for empty input', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const button = screen.getByRole('button', { name: /Search/i });
 
@@ -49,7 +49,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('does not call searchText for whitespace-only input', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });
@@ -61,7 +61,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('trims whitespace from input before calling searchText', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });
@@ -73,7 +73,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('clears input field after submission', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });
@@ -86,7 +86,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('submits on Enter key press', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
 
@@ -96,7 +96,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('allows multiple searches', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });
@@ -114,14 +114,14 @@ describe('ImageSearch Component', () => {
   });
 
   test('prevents default form submission behavior', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });
 
     await userEvent.type(input, 'nature');
     const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-    const preventDefaultSpy = jest.spyOn(submitEvent, 'preventDefault');
+    const preventDefaultSpy = vi.spyOn(submitEvent, 'preventDefault');
     button.form.dispatchEvent(submitEvent);
 
     // The form should still work without page reload (default prevented)
@@ -129,7 +129,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('handles special characters in search term', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });
@@ -141,7 +141,7 @@ describe('ImageSearch Component', () => {
   });
 
   test('handles numbers in search term', async () => {
-    const mockSearchText = jest.fn();
+    const mockSearchText = vi.fn();
     render(<ImageSearch searchText={mockSearchText} />);
     const input = screen.getByPlaceholderText(/Search Image Term/i);
     const button = screen.getByRole('button', { name: /Search/i });

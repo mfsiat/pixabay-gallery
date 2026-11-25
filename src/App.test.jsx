@@ -26,12 +26,16 @@ const mockImageData = {
   ]
 };
 
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 describe('App Component', () => {
   beforeEach(() => {
     fetch.mockClear();
-    process.env.REACT_APP_PIXABAY_API_KEY = 'test-api-key';
+    vi.stubEnv('VITE_PIXABAY_API_KEY', 'test-api-key');
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   test('renders loading state initially', () => {
@@ -138,12 +142,13 @@ describe('App Component', () => {
   });
 
   test('aborts fetch on unmount', async () => {
-    const OriginalAbortController = global.AbortController;
-    const abortSpy = jest.fn();
-    global.AbortController = jest.fn(() => ({
-      signal: {},
-      abort: abortSpy
-    }));
+    const RealAbortController = global.AbortController;
+    const abortSpy = vi.fn();
+    // Use a real constructable class: `new AbortController()` must work.
+    global.AbortController = class {
+      signal = {};
+      abort = abortSpy;
+    };
 
     try {
       fetch.mockImplementation(() => new Promise(() => {}));
@@ -152,7 +157,8 @@ describe('App Component', () => {
       unmount();
       expect(abortSpy).toHaveBeenCalled();
     } finally {
-      global.AbortController = OriginalAbortController;
+      // Restore so later tests get a real AbortController.
+      global.AbortController = RealAbortController;
     }
   });
 
