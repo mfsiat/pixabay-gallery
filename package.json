@@ -2,27 +2,23 @@
   "name": "react-tailwiind-pixabay-gallery",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "homepage": "https://mfsiat.github.io/pixabay-gallery",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "dependencies": {
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.3.1",
-    "@testing-library/user-event": "^14.5.2",
-    "gh-pages": "^5.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1"
+    "react-dom": "^18.3.1"
   },
   "scripts": {
-    "start": "concurrently \"npm run watch:css\" \"react-scripts start\"",
-    "build": "npm run build:css && react-scripts build",
-    "deploy": "gh-pages -d build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build:css": "postcss src/assets/tailwind.css -o src/assets/main.css",
-    "watch:css": "postcss src/assets/tailwind.css -o src/assets/main.css --watch"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "deploy": "gh-pages -d build"
   },
   "browserslist": {
     "production": [
@@ -37,13 +33,16 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@vitejs/plugin-react": "^6.3.0",
     "autoprefixer": "^10.4.20",
-    "concurrently": "^10.0.4",
+    "gh-pages": "^6.3.0",
+    "jsdom": "^31.0.1",
     "postcss": "^8.4.49",
-    "postcss-cli": "^11.0.0",
-    "postcss-flexbugs-fixes": "^5.0.2",
-    "postcss-normalize": "^10.0.1",
-    "postcss-preset-env": "^7.0.1",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.2"
   }
 }

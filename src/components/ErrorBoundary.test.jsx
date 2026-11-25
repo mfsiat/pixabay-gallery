@@ -5,7 +5,7 @@ import ErrorBoundary from './ErrorBoundary';
 // Suppress console.error for these tests since we're intentionally triggering errors
 const originalError = console.error;
 beforeAll(() => {
-  console.error = jest.fn();
+  console.error = vi.fn();
 });
 
 afterAll(() => {
@@ -69,7 +69,7 @@ describe('ErrorBoundary Component', () => {
   });
 
   test('logs error to console when error is caught', () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
 
     render(
       <ErrorBoundary>

@@ -39,14 +39,14 @@ Get a free API key at [pixabay.com/api/docs](https://pixabay.com/api/docs/).
 
 ## Security Note
 
-This is a client-side-only React app. The Pixabay API key is embedded in the JavaScript bundle at build time and **is visible to anyone who inspects the page source**. This is a known limitation of CRA's `REACT_APP_*` pattern.
+This is a client-side-only React app. The Pixabay API key is embedded in the JavaScript bundle at build time and **is visible to anyone who inspects the page source**. This is inherent to any static SPA: a `VITE_*` env var is inlined into the bundle and shipped to the browser.
 
 Recommended mitigations:
 - **Restrict the key by referrer domain** in your Pixabay account settings so it cannot be used from other origins.
 - **Proxy via a backend** (e.g. a Next.js API route or serverless function) to keep the key server-side — see [issue #43](https://github.com/mfsiat/pixabay-gallery/issues/43) for details.
 - Treat the key as **disposable** — rotate it immediately if you suspect abuse.
 
-Never store sensitive keys (Stripe, AWS, etc.) using `REACT_APP_*` in a public repository.
+Never store sensitive keys (Stripe, AWS, etc.) in a client-inlined `VITE_*` env var in a public repository.
 
 ## Credits 
 

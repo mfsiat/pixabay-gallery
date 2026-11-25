@@ -3,11 +3,12 @@ import ImageCard from './components/ImageCard';
 import ImageSearch from './components/ImageSearch';
 
 
-if (process.env.NODE_ENV === 'development' && !process.env.REACT_APP_PIXABAY_API_KEY) {
-  console.warn(
-    '[pixabay-gallery] REACT_APP_PIXABAY_API_KEY is not set.\n' +
-    'Copy .env.example to .env and add your key from https://pixabay.com/api/docs/'
-  );
+const MISSING_KEY_MESSAGE =
+  'Pixabay API key is not configured. Copy .env.example to .env and add your ' +
+  'key from https://pixabay.com/api/docs/';
+
+if (import.meta.env.DEV && import.meta.env.MODE !== 'test' && !import.meta.env.VITE_PIXABAY_API_KEY) {
+  console.warn(`[pixabay-gallery] ${MISSING_KEY_MESSAGE}`);
 }
 
 function App() {
@@ -17,17 +18,34 @@ function App() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Read at call time so a key set after module load (e.g. in tests) is seen.
+    const apiKey = import.meta.env.VITE_PIXABAY_API_KEY;
+
+    // Without a key the request would hit Pixabay unauthenticated; surface a
+    // distinct, actionable message instead of the generic failure state.
+    if (!apiKey) {
+      setError(MISSING_KEY_MESSAGE);
+      setIsLoading(false);
+      return;
+    }
+
     const controller = new AbortController();
 
     setIsLoading(true);
     setError(null);
 
     fetch(
-      `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${term}&image_type=photo&pretty=true`,
+      `https://pixabay.com/api/?key=${apiKey}&q=${term}&image_type=photo&pretty=true`,
       { signal: controller.signal }
     )
       .then(res => {
-        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        if (!res.ok) {
+          // 400/401/429 almost always mean a missing/invalid/rate-limited key.
+          if (res.status === 400 || res.status === 401 || res.status === 429) {
+            throw new Error(`AUTH:${res.status}`);
+          }
+          throw new Error(`API error: ${res.status}`);
+        }
         return res.json();
       })
       .then(data => {
@@ -37,7 +55,12 @@ function App() {
       .catch(err => {
         if (err.name === 'AbortError') return;
         console.error(err);
-        setError('Failed to load images. Please try again.');
+        setError(
+          err.message?.startsWith('AUTH:')
+            ? `Pixabay rejected the request (HTTP ${err.message.slice(5)}). ` +
+              'Check that your API key is valid and within its rate limit.'
+            : 'Failed to load images. Please try again.'
+        );
         setIsLoading(false);
       });
 
